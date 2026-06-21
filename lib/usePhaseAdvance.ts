@@ -18,7 +18,7 @@ export function usePhaseAdvance(roomId: string, phase: GamePhase) {
     advancingRef.current = true;
     try {
       const supabase = getSupabase();
-      const { error } = await supabase.rpc("advance_phase", {
+      const { error } = await supabase.rpc("tp_advance_phase", {
         p_room_id: roomId,
       });
       if (error) {

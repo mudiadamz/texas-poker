@@ -39,7 +39,7 @@ export function useProfile(userId: string | null | undefined): UseProfile {
     if (!uid) return;
     const supabase = getSupabase();
     const { data } = await supabase
-      .from("profiles")
+      .from("tp_profiles")
       .select(
         "user_id, chips, is_admin, spins_remaining, next_spin_refill_at, welcome_claimed_at, last_spin_at, last_daily_at, updated_at",
       )
@@ -57,7 +57,7 @@ export function useProfile(userId: string | null | undefined): UseProfile {
     let cancelled = false;
 
     void supabase
-      .from("profiles")
+      .from("tp_profiles")
       .select(
         "user_id, chips, is_admin, spins_remaining, next_spin_refill_at, welcome_claimed_at, last_spin_at, last_daily_at, updated_at",
       )
@@ -74,7 +74,7 @@ export function useProfile(userId: string | null | undefined): UseProfile {
         {
           event: "*",
           schema: "public",
-          table: "profiles",
+          table: "tp_profiles",
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {

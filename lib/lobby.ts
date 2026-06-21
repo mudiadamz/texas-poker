@@ -16,9 +16,9 @@ export type LobbyRoom = {
 export async function fetchLobbyRooms(): Promise<LobbyRoom[]> {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from("rooms")
+    .from("tp_rooms")
     .select(
-      "id, name, phase, created_at, small_blind, big_blind, players(id)",
+      "id, name, phase, created_at, small_blind, big_blind, players:tp_players(id)",
     )
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);

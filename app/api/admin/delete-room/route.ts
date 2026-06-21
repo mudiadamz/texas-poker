@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
-    .from("rooms")
+    .from("tp_rooms")
     .delete()
     .eq("id", roomId)
     .select("id");

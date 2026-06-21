@@ -121,12 +121,12 @@ export default function LobbyPage() {
       .channel("lobby-live")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "players" },
+        { event: "*", schema: "public", table: "tp_players" },
         debounced,
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "rooms" },
+        { event: "*", schema: "public", table: "tp_rooms" },
         debounced,
       )
       .subscribe();
@@ -170,7 +170,7 @@ export default function LobbyPage() {
 
         const supabase = getSupabase();
         const id = nanoid();
-        const { error: createErr } = await supabase.from("rooms").insert({
+        const { error: createErr } = await supabase.from("tp_rooms").insert({
           id,
           name: null,
           phase: "waiting",

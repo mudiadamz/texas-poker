@@ -12,7 +12,7 @@ export async function POST(_req: Request, { params }: Params) {
   const admin = getSupabaseAdmin();
 
   const { data: room, error: roomErr } = await admin
-    .from("rooms")
+    .from("tp_rooms")
     .select("*")
     .eq("id", roomId)
     .maybeSingle();
@@ -30,7 +30,7 @@ export async function POST(_req: Request, { params }: Params) {
   }
 
   const { data: players, error: playerErr } = await admin
-    .from("players")
+    .from("tp_players")
     .select("id, name, hole_cards, folded")
     .eq("room_id", roomId);
 
@@ -55,7 +55,7 @@ export async function POST(_req: Request, { params }: Params) {
     }));
 
   if (contenders.length === 0) {
-    await admin.rpc("apply_showdown_winners", {
+    await admin.rpc("tp_apply_showdown_winners", {
       p_room_id: roomId,
       p_winners: [],
     });
@@ -77,7 +77,7 @@ export async function POST(_req: Request, { params }: Params) {
     hand_label: w.hand.label,
   }));
 
-  const { error: rpcErr } = await admin.rpc("apply_showdown_winners", {
+  const { error: rpcErr } = await admin.rpc("tp_apply_showdown_winners", {
     p_room_id: roomId,
     p_winners: winnersPayload,
   });

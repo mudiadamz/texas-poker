@@ -50,7 +50,7 @@ export async function getAdminUser(req: Request): Promise<AdminUser | null> {
   const user = userData.user;
 
   const { data: profile } = await admin
-    .from("profiles")
+    .from("tp_profiles")
     .select("is_admin")
     .eq("user_id", user.id)
     .maybeSingle();
@@ -64,7 +64,7 @@ export async function getAdminUser(req: Request): Promise<AdminUser | null> {
   const email = user.email?.toLowerCase() ?? null;
   if (email && allow.includes(email)) {
     await admin
-      .from("profiles")
+      .from("tp_profiles")
       .update({ is_admin: true })
       .eq("user_id", user.id);
     return { userId: user.id, email: user.email ?? null };

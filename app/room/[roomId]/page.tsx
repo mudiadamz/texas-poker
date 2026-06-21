@@ -112,7 +112,7 @@ export default function RoomPage({ params }: { params: Params }) {
     const supabase = getSupabase();
     let cancelled = false;
     void supabase
-      .from("app_settings")
+      .from("tp_app_settings")
       .select("action_timeout_seconds")
       .eq("id", 1)
       .maybeSingle()
@@ -129,7 +129,7 @@ export default function RoomPage({ params }: { params: Params }) {
         {
           event: "UPDATE",
           schema: "public",
-          table: "app_settings",
+          table: "tp_app_settings",
           filter: "id=eq.1",
         },
         (payload) => {
@@ -157,7 +157,7 @@ export default function RoomPage({ params }: { params: Params }) {
         await cleanupStalePlayers(roomId).catch(() => {});
 
         const { data: roomData, error: roomErr } = await supabase
-          .from("rooms")
+          .from("tp_rooms")
           .select("*")
           .eq("id", roomId)
           .maybeSingle();
@@ -168,7 +168,7 @@ export default function RoomPage({ params }: { params: Params }) {
         }
 
         const { data: playerData, error: playerErr } = await supabase
-          .from("players")
+          .from("tp_players")
           .select("*")
           .eq("room_id", roomId)
           .order("joined_at", { ascending: true });
@@ -207,7 +207,7 @@ export default function RoomPage({ params }: { params: Params }) {
       .channel(`room:${roomId}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "rooms", filter: `id=eq.${roomId}` },
+        { event: "*", schema: "public", table: "tp_rooms", filter: `id=eq.${roomId}` },
         (payload) => {
           if (payload.eventType === "DELETE") {
             setNotFound(true);
@@ -236,7 +236,7 @@ export default function RoomPage({ params }: { params: Params }) {
         {
           event: "*",
           schema: "public",
-          table: "players",
+          table: "tp_players",
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
@@ -371,7 +371,7 @@ export default function RoomPage({ params }: { params: Params }) {
           try {
             const supabase = getSupabase();
             const { data, error: insertErr } = await supabase
-              .from("players")
+              .from("tp_players")
               .insert({ room_id: roomId, name })
               .select("*")
               .single();
@@ -450,7 +450,7 @@ export default function RoomPage({ params }: { params: Params }) {
     async (name: string, avatarUrl?: string | null) => {
       const supabase = getSupabase();
       const { data, error: insertErr } = await supabase
-        .from("players")
+        .from("tp_players")
         .insert({
           room_id: roomId,
           name,
@@ -560,7 +560,7 @@ export default function RoomPage({ params }: { params: Params }) {
 
     function fire() {
       void getSupabase()
-        .rpc("start_hand", { p_room_id: room!.id })
+        .rpc("tp_start_hand", { p_room_id: room!.id })
         .then(({ error: err }) => {
           if (err && !err.message.includes("Room not found")) {
             console.warn("auto start_hand:", err.message);
@@ -610,7 +610,7 @@ export default function RoomPage({ params }: { params: Params }) {
       lastManualActionAtRef.current = Date.now();
       try {
         const supabase = getSupabase();
-        const { error: err } = await supabase.rpc("player_action", {
+        const { error: err } = await supabase.rpc("tp_player_action", {
           p_room_id: room.id,
           p_player_id: playerId,
           p_action: action,
@@ -661,7 +661,7 @@ export default function RoomPage({ params }: { params: Params }) {
       // looks at a folded ghost waiting for a popup half a world
       // away.
       try {
-        await getSupabase().from("players").delete().eq("id", playerId);
+        await getSupabase().from("tp_players").delete().eq("id", playerId);
       } catch (err) {
         console.error("inactivity delete failed", err);
       }
@@ -726,7 +726,7 @@ export default function RoomPage({ params }: { params: Params }) {
       bustKickedRef.current = true;
       void (async () => {
         try {
-          await getSupabase().from("players").delete().eq("id", playerId);
+          await getSupabase().from("tp_players").delete().eq("id", playerId);
         } catch (err) {
           console.error("bust delete failed", err);
         }
@@ -807,7 +807,7 @@ export default function RoomPage({ params }: { params: Params }) {
         prev.map((p) => (p.id === playerId ? { ...p, name: trimmed } : p)),
       );
       const { error: err } = await supabase
-        .from("players")
+        .from("tp_players")
         .update({ name: trimmed })
         .eq("id", playerId);
       if (err) setError("Failed to rename.");
@@ -833,7 +833,7 @@ export default function RoomPage({ params }: { params: Params }) {
       // having to wait for the action timer to fire on us.
       if (isMyTurn(room, playerId)) {
         try {
-          await supabase.rpc("player_action", {
+          await supabase.rpc("tp_player_action", {
             p_room_id: room.id,
             p_player_id: playerId,
             p_action: "fold",
@@ -857,7 +857,7 @@ export default function RoomPage({ params }: { params: Params }) {
         }
       }
       try {
-        await supabase.from("players").delete().eq("id", playerId);
+        await supabase.from("tp_players").delete().eq("id", playerId);
       } catch {
         /* ignore */
       }

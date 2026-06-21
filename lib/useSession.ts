@@ -80,7 +80,7 @@ export function useSession(): SessionState {
     kickedRef.current = false;
 
     void supabase
-      .rpc("claim_session", { p_session_id: deviceId })
+      .rpc("tp_claim_session", { p_session_id: deviceId })
       .then(({ error }) => {
         if (error) console.warn("claim_session failed", error.message);
       });
@@ -92,7 +92,7 @@ export function useSession(): SessionState {
         {
           event: "UPDATE",
           schema: "public",
-          table: "profiles",
+          table: "tp_profiles",
           filter: `user_id=eq.${uid}`,
         },
         (payload) => {

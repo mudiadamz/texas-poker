@@ -57,7 +57,7 @@ export async function POST(req: Request) {
   const admin = getSupabaseAdmin();
   const id = nanoid();
   const { data, error } = await admin
-    .from("rooms")
+    .from("tp_rooms")
     .insert({
       id,
       name,

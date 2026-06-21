@@ -33,7 +33,7 @@ export function WelcomeBonusModal({ onClaimed, onDismiss }: Props) {
     try {
       const supabase = getSupabase();
       const { data, error: rpcErr } = await supabase
-        .rpc("claim_welcome_bonus")
+        .rpc("tp_claim_welcome_bonus")
         .single();
       if (rpcErr) throw rpcErr;
       const amount = (data as { amount: number } | null)?.amount ?? BONUS_AMOUNT;

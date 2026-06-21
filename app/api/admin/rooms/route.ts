@@ -39,9 +39,9 @@ export async function GET(req: Request) {
 
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
-    .from("rooms")
+    .from("tp_rooms")
     .select(
-      "id, name, phase, community_cards, pot, current_bet, small_blind, big_blind, created_at, players(id, room_id, name, hole_cards, chips, bet_street, folded, all_in, last_seen, joined_at)",
+      "id, name, phase, community_cards, pot, current_bet, small_blind, big_blind, created_at, players:tp_players(id, room_id, name, hole_cards, chips, bet_street, folded, all_in, last_seen, joined_at)",
     )
     .order("created_at", { ascending: false });
 

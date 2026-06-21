@@ -19,7 +19,7 @@ export function useBuyInBb(): number {
     let cancelled = false;
 
     void supabase
-      .from("app_settings")
+      .from("tp_app_settings")
       .select("buy_in_bb")
       .eq("id", 1)
       .maybeSingle()
@@ -36,7 +36,7 @@ export function useBuyInBb(): number {
         {
           event: "UPDATE",
           schema: "public",
-          table: "app_settings",
+          table: "tp_app_settings",
           filter: "id=eq.1",
         },
         (payload) => {

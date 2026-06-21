@@ -27,7 +27,7 @@ function clamp(field: FieldKey, raw: unknown): number | null {
 async function readSingleton() {
   const admin = getSupabaseAdmin();
   const { data, error } = await admin
-    .from("app_settings")
+    .from("tp_app_settings")
     .select("*")
     .eq("id", 1)
     .maybeSingle();
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 
   const admin = getSupabaseAdmin();
   const { error, data } = await admin
-    .from("app_settings")
+    .from("tp_app_settings")
     .update(update)
     .eq("id", 1)
     .select("*")

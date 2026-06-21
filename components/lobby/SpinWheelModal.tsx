@@ -118,7 +118,7 @@ export function SpinWheelModal({
     try {
       const supabase = getSupabase();
       const { data, error: rpcErr } = await supabase
-        .rpc("spin_wheel")
+        .rpc("tp_spin_wheel")
         .single();
       if (rpcErr) throw rpcErr;
       const row = data as {

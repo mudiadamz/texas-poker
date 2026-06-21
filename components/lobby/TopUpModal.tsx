@@ -61,7 +61,7 @@ export function TopUpModal({
     try {
       const supabase = getSupabase();
       const { error: rpcErr } = await supabase
-        .rpc("claim_daily_bonus")
+        .rpc("tp_claim_daily_bonus")
         .single();
       if (rpcErr) throw rpcErr;
       setClaimed(true);
